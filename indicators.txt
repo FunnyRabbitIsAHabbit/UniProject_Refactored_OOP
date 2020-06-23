@@ -1,0 +1,9 @@
+Population, total
+GDP (constant 2010 US$)
+GDP, PPP (current international $)
+Patent applications, residents
+Charges for the use of intellectual property, payments (BoP, current US$)
+Individuals using the Internet (% of population)
+Secure Internet servers
+Fixed broadband subscriptions
+ICT service exports (BoP, current US$)
