@@ -14,8 +14,11 @@ from matplotlib.figure import Figure
 import pandas_datareader._utils as pdu
 from pandas_datareader import wb
 import pandas as pd
+import seaborn as sns
 
 import local_en as local
+
+sns.set()
 
 
 class DataSet:
