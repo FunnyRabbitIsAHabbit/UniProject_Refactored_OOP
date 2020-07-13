@@ -22,11 +22,11 @@ def linear_model(name_data, ts_data_dep, ts_data_indep):
     :param name_data: str
     :param ts_data_dep: pandas.DataFrame
     :param ts_data_indep: pandas.DataFrame
-    :return: results_filename str,
-    data dict {year: value}
+    :return: results_filename str, data dict {year: value}
     """
 
-    filename = 'LINEAR_model_'+name_data+str(datetime.now().timestamp())+'.txt'
+    now = str(datetime.now().timestamp())
+    filename = 'models/LINEAR_model_' + name_data + now[:now.find('.')] + '.txt'
 
     ts_data_indep = sm.add_constant(ts_data_indep)
     reg = sm.OLS(ts_data_dep, ts_data_indep)
@@ -43,6 +43,10 @@ def linear_model(name_data, ts_data_dep, ts_data_indep):
     dic = df.to_dict('index')
     nd = {dic[key]['year']: float(dic[key]['value'])
           for key in dic}
+
+    json_filename = 'models/LINEAR_model_' + name_data + now[:now.find('.')] + '.json'
+    with open(json_filename, 'w') as a:
+        json.dump(nd, a)
 
     return filename, nd
 
@@ -85,12 +89,12 @@ def arima_model(name_data, ts_data, p=None, d=None, q=None, prdct=None):
                        for i in range(1, len(prediction)+1)}
         results = model_fit.summary()
         now = str(datetime.now().timestamp())
-        filename = 'ARIMA_model_' + name_data + now[:now.find('.')] + '.txt'
+        filename = 'models/ARIMA_model_' + name_data + now[:now.find('.')] + '.txt'
 
         with open(filename, 'w') as a:
             a.write(str(results))
 
-        json_filename = 'ARIMA_model_' + name_data + now[:now.find('.')] + '.json'
+        json_filename = 'models/ARIMA_model_' + name_data + now[:now.find('.')] + '.json'
         nd.update(predictions)
         with open(json_filename, 'w') as a:
             json.dump(nd, a)

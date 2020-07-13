@@ -23,8 +23,6 @@ sns.set()
 
 class DataSet:
 
-
-
     def __init__(self, countries=None,
                  indicators=None, start_year=None, stop_year=None):
         """

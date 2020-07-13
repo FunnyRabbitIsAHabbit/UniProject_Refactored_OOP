@@ -1,5 +1,6 @@
 from tkinter import *
 from threading import Thread, ThreadError
+from datetime import datetime
 
 from OOP import *
 import local_en as local
@@ -163,7 +164,7 @@ class App(Tk):
         self.load_button = Button(self.top_frame,
                                   width=App.BUTTON_WIDTH, height=int(App.BUTTON_WIDTH / 2),
                                   text=local.LOAD_GRAPH,
-                                  command=self.load_button_bound)
+                                  command=self.save_figure_load_button_bound)
         self.load_button.grid(row=0, column=1, sticky=N + E, rowspan=3)
 
         self.results_button = Button(self.top_frame,
@@ -253,7 +254,6 @@ class App(Tk):
         self.listbox.grid(row=1, column=0, columnspan=2)
 
         self.graph_object = PlotWindow(self.right_frame)
-        self.graph_object.grid(row=0, column=0, columnspan=5, sticky=N)
 
         self.message_object = Label(self.bottom_frame, text=(local.WELCOME + ' ' + local.PUSH_LOAD_VARIABLES))
         self.message_object.grid(row=2, column=0, columnspan=8)
@@ -263,7 +263,7 @@ class App(Tk):
         self.listbox.bind('<Return>', self.enter_variables_button_bound)
         self.bind('<Escape>', self.exit_button_bound)
 
-    def load_button_bound(self, event=None):
+    def save_figure_load_button_bound(self, event=None):
         """
         Bound events on Load button
 
@@ -291,10 +291,13 @@ class App(Tk):
                                                    'Predicted Y')
                     self.to_plot_data1.clear()
 
+                now = str(datetime.now().timestamp())
+                filename = 'images/' + self.model_to_use + '_' + '_'.join(self.dependent_variable.split()) + \
+                           now[:now.find('.')] + '.jpg'
+                mpl_subplot.savefig(filename)
                 mpl_subplot.suptitle(local.GRAPH_TITLE)
                 mpl_subplot.nice_plot('Year', self.dependent_variable)
                 self.graph_object.add_mpl_figure(mpl_subplot)
-
                 self.graph_object.grid(row=0, column=0, columnspan=5, sticky=N)
 
             else:
