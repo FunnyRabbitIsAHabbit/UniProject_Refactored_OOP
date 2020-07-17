@@ -118,6 +118,7 @@ class InsideApp(Tk):
 
 
 class App(Tk):
+
     DEFAULT_FR_DATE = '1995'
     DEFAULT_TO_DATE = '2020'
     DEFAULT_KEYWORDS = local.DEFAULT_KEYWORDS
@@ -215,17 +216,9 @@ class App(Tk):
         self.d = Entry(self.bottom_frame)
         self.q = Entry(self.bottom_frame)
 
-        self.p.grid(row=0, column=1)
-        self.d.grid(row=0, column=3)
-        self.q.grid(row=0, column=5)
-
         self.pl = Label(self.bottom_frame, text=local.AUTO_REGRESSION)
         self.dl = Label(self.bottom_frame, text=local.INTEGRATED)
         self.ql = Label(self.bottom_frame, text=local.MOV_A)
-
-        self.pl.grid(row=0, column=0)
-        self.dl.grid(row=0, column=2)
-        self.ql.grid(row=0, column=4)
 
         self.p.insert(0, App.DEFAULT_p)
         self.d.insert(0, App.DEFAULT_d)
@@ -235,12 +228,7 @@ class App(Tk):
         self.forecast_label = Label(self.bottom_frame, text=local.PROJECTION_PERIOD)
         self.forecast.insert(0, '1')
 
-        self.forecast_label.grid(row=1, column=0)
-        self.forecast.grid(row=1, column=1)
-
         self.warning_label = Label(self.bottom_frame, text=local.WARNING)
-
-        self.warning_label.grid(row=1, column=2, columnspan=3)
 
         self.keyword_text = Entry(self.top_frame, width=App.LIST_WIDTH + 10)
         self.keyword_text.insert(0, App.DEFAULT_KEYWORDS)
@@ -293,10 +281,10 @@ class App(Tk):
 
                 now = str(datetime.now().timestamp())
                 filename = 'images/' + self.model_to_use + '_' + '_'.join(self.dependent_variable.split()) + \
-                           now[:now.find('.')] + '.jpg'
-                mpl_subplot.savefig(filename)
+                           '_' + now[:now.find('.')] + '.jpg'
                 mpl_subplot.suptitle(local.GRAPH_TITLE)
                 mpl_subplot.nice_plot('Year', self.dependent_variable)
+                mpl_subplot.savefig(filename, dpi=500)
                 self.graph_object.add_mpl_figure(mpl_subplot)
                 self.graph_object.grid(row=0, column=0, columnspan=5, sticky=N)
 
@@ -316,6 +304,30 @@ class App(Tk):
         """
 
         self.model_to_use = self.model_var.get()
+
+        if self.model_to_use == 'ARIMA':
+
+            self.warning_label.grid(row=1, column=2, columnspan=3)
+
+            self.p.grid(row=0, column=1)
+            self.d.grid(row=0, column=3)
+            self.q.grid(row=0, column=5)
+
+            self.pl.grid(row=0, column=0)
+            self.dl.grid(row=0, column=2)
+            self.ql.grid(row=0, column=4)
+
+            self.forecast_label.grid(row=1, column=0)
+            self.forecast.grid(row=1, column=1)
+
+        else:
+            objs = [self.p, self.d, self.q,
+                    self.pl, self.dl, self.ql,
+                    self.forecast, self.forecast_label,
+                    self.warning_label]
+
+            for obj in objs:
+                obj.grid_forget()
 
     def results_button_bound(self, event=None):
         """
