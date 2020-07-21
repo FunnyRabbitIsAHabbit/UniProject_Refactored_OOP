@@ -16,7 +16,6 @@ from statsmodels.tsa.stattools import kpss
 from arch.unitroot import VarianceRatio as vr, ADF as adf, KPSS as kpss
 from statsmodels.tsa.arima_model import ARIMA
 from datetime import datetime
-from numpy.random import randint
 
 
 def get_stationary_i(ts_data):
@@ -139,8 +138,3 @@ def arima_model(name_data, ts_data, p=None, d=None, q=None, prdct=None):
     except Exception as error:
         return error, dict(), dict()
 
-
-data = [[randint(1, 50)*randint(-2.5, 0.3)
-         for _ in range(100)]
-        for _ in range(100)]
-print(get_stationary_i(data))
