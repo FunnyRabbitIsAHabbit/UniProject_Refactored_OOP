@@ -343,7 +343,10 @@ class App(Tk):
             new_window.title(self.regression_results)
 
             with open(self.regression_results) as a:
-                lbl = Label(new_window, text=a.read())
+                lines = a.readlines()
+                lbl = Text(new_window,
+                           width=max([len(line) for line in lines]))
+                lbl.insert(1.0, ''.join(lines))
             lbl.pack()
 
             new_window.mainloop()

@@ -71,10 +71,10 @@ def linear_model(name_data, ts_data_dep, ts_data_indep):
     ts_data_indep = sm.add_constant(ts_data_indep)
     reg = sm.OLS(ts_data_dep, ts_data_indep)
     model_fit = reg.fit()
-    results = model_fit.summary()
+    results = model_fit.summary().as_text()
 
     with open(filename, 'w') as a:
-        a.write(str(results))
+        a.write(results)
 
     dic = filter_data(ts_data_dep.items()).to_dict('index')
     nd = {dic[key]['year']: float(dic[key]['value'])
@@ -121,12 +121,12 @@ def arima_model(name_data, ts_data, p=None, d=None, q=None, prdct=None):
 
         predictions = {year_since + i: float(prediction[i - 1])
                        for i in range(1, len(prediction) + 1)}
-        results = model_fit.summary()
+        results = model_fit.summary().as_text()
         now = str(datetime.now().timestamp())
         filename = 'models/ARIMA_model_' + '_'.join(name_data.split()) + '_' + now[:now.find('.')] + '.txt'
 
         with open(filename, 'w') as a:
-            a.write(str(results))
+            a.write(results)
 
         json_filename = 'models/ARIMA_model_' + '_'.join(name_data.split()) + '_' + now[:now.find('.')] + '.json'
         nd.update(predictions)
