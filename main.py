@@ -1,10 +1,11 @@
-from tkinter import *
-from threading import Thread, ThreadError
 from datetime import datetime
+from threading import Thread, ThreadError
+from multiprocessing import Process, ProcessError
+from tkinter import *
 
-from OOP import *
 import local_en as local
 import regression
+from OOP import *
 
 
 class InsideApp(Tk):
@@ -15,7 +16,7 @@ class InsideApp(Tk):
         self.upper_app = upper_app
 
         Button(self, text=local.EXIT, command=self.exit_small).grid(row=0, column=0)
-        Button(self, text=local.BUTTON_SELECT, command=self.get_selected).grid(row=0, column=1)
+        Button(self, text=local.BUTTON_SELECT_RUN, command=self.get_selected).grid(row=0, column=1)
         Label(self, text=local.DEPENDENT_VARIABLE_SELECTION).grid(row=1, column=0, columnspan=2)
         self.inner_listbox = Listbox(self, selectmode=SINGLE, width=self.upper_app.LIST_WIDTH,
                                      height=self.upper_app.ELEMENTS_IN_LIST)
@@ -118,7 +119,6 @@ class InsideApp(Tk):
 
 
 class App(Tk):
-
     DEFAULT_FR_DATE = '1995'
     DEFAULT_TO_DATE = '2020'
     DEFAULT_KEYWORDS = local.DEFAULT_KEYWORDS
@@ -154,6 +154,7 @@ class App(Tk):
         self.data = None
         self.to_plot_data = None
         self.to_plot_data1 = None
+        self.t1 = None
 
         # Buttons and Radiobuttons ------------------------------------------
         self.exit_button = Button(self.top_frame,
@@ -379,6 +380,9 @@ class App(Tk):
         except ValueError:
             self.message_object['text'] = local.ERROR_WRONG_YEAR
 
+        finally:
+            self.t1.should_abort_immediately = True
+
     def data_load_button_bound(self, event=None):
         """
         Bound events on Load Data button
@@ -394,9 +398,9 @@ class App(Tk):
 
             self.message_object['text'] = local.LOADING
 
-            t1 = Thread(target=self.go)
-            t1.setDaemon(True)
-            t1.start()
+            self.t1 = Thread(target=self.go)
+            self.t1.setDaemon(True)
+            self.t1.start()
 
         except BaseException as error:
             self.message_object['text'] = error

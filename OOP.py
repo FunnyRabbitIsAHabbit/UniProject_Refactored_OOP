@@ -118,11 +118,12 @@ class DataSet:
             indicator_set_clean = data.loc[data['name'].isin(indicator_set)]['id'].to_list()
             indicators_ids_data = wb.download(country=self.countries,
                                               indicator=indicator_set_clean,
-                                              start=self.start_year, end=self.stop_year)
+                                              start=self.start_year, end=self.stop_year,
+                                              errors='raise')
 
             self.indicators_ids_data = indicators_ids_data
 
-            return indicators_ids_data
+            return self.indicators_ids_data
 
         except AttributeError as error1:
             DataSet.current_error = local.ERROR + str(error1)
