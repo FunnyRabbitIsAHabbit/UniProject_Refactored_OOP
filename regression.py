@@ -13,29 +13,30 @@ import json
 
 from statsmodels.tsa.stattools import adfuller as adf
 from statsmodels.tsa.stattools import kpss
-from arch.unitroot import VarianceRatio as vr, ADF as adf, KPSS as kpss
+from arch.unitroot import ADF as adf, KPSS as kpss
 from statsmodels.tsa.arima_model import ARIMA
 from datetime import datetime
 
 
-def get_stationary_i(ts_data):
+def get_stationary_i(ts_data,
+                     method_adf='AIC'):
     """
 
+    :param method_adf: str of CRITERIA, where criteria - 'AIC' or 'BIC' or 't-stat'
     :param ts_data: list of lists
     :return: list (len = len(ts_data))
     """
 
-    integrated_as = [[0, 0, 0]
+    integrated_as = [[0, 0]
                      for _ in range(len(ts_data))]
 
     for i in range(len(ts_data)):
-        integrated_as[i][0] = adf(ts_data[i]).lags
-        integrated_as[i][1] = vr(ts_data[i]).lags
-        integrated_as[i][2] = kpss(ts_data[i]).lags
+        integrated_as[i][0] = adf(ts_data[i], method=method_adf).lags
+        integrated_as[i][1] = kpss(ts_data[i]).lags
 
     for i in range(len(integrated_as)):
         ints = {integrated_as[i].count(integrated_as[i][j]): integrated_as[i][j]
-                for j in (0, 1, 2)}
+                for j in (0, 1)}
         integrated_as[i] = ints[max(ints)]
 
     return integrated_as
